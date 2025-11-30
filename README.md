@@ -152,6 +152,7 @@ int main(void) {
 
 ### Animal
 ```c
+#include <stdio.h>
 #include "ssal.c"
 
 class(Animal)
