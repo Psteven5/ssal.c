@@ -115,6 +115,7 @@ class(Car)
 interface(Vehicle
   , virtual_method(accelerate, void ,(const *this), { assert(!"unreachable"); })
   , virtual_method(brake, void ,(const *this), { assert(!"unreachable"); })
+  // virtual_method(brake, void ,(const *this),) would instead move usage error to link-time
 
   , method(startEngine, void ,(const *this) {
     puts("Engine started!");
