@@ -51,7 +51,7 @@ static_method(make, Vector2 ,(float x, float y) {
   return (Vector2){.x = x, .y = y};
 })
 
-static_property(active, Allocator *) // defines a global variable Allocator_active of type Allocator *
+static_property(active, Allocator *, NULL) // defines a global variable Allocator_active of type Allocator * with value NULL
 type(Iterator, char *) // defines a typedef String_Iterator of type char *
 
 // defines a function Baz_write like above, but also puts a field "write" inside Baz_VTable
