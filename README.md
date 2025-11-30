@@ -208,14 +208,14 @@ Car.c
 #include "Car.h"
 
 implementation(Car
-  , static_method(_accelerate, void ,(const Vehicle *this) {
+  , static_method(_accelerate, static void ,(const Vehicle *this) {
     Car_accelerate(dynamic_cast(Vehicle, Car)(this));
   })
 
   , method(brake, void ,(const *this) {
     puts("Car: Applying brakes...");
   })
-  , static_method(_brake, void ,(const Vehicle *this) {
+  , static_method(_brake, static void ,(const Vehicle *this) {
     Car_brake(dynamic_cast(Vehicle, Car)(this));
   })
 
