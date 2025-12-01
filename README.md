@@ -1,5 +1,5 @@
 # ssal.c
-Object-Oriented macro abuse in C 
+Object-Oriented macro abuse in C
 
 ## Usage
 `ssal.c` is header-only (despite the name); copy the file somewhere and include it in your project.
