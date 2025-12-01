@@ -41,14 +41,14 @@ extends(Foo, Bar) // has the current class inherit fields and v-tables from clas
 
 // defines a function Baz_write that takes a const Baz * and a FILE *
 method(write, void ,(const *this, FILE *stream) {
-  fprintf(stream, "Baz@%p", (void *)this);
+    fprintf(stream, "Baz@%p", (void *)this);
 })
 
 property(x, int) // declares a field x of type int
 
 // defines a function Vector2_make that takes 2 floats
 static_method(make, Vector2 ,(float x, float y) {
-  return (Vector2){.x = x, .y = y};
+    return (Vector2){.x = x, .y = y};
 })
 
 static_property(active, Allocator *, NULL) // defines a global variable Allocator_active of type Allocator * with value NULL
@@ -57,7 +57,7 @@ type(Iterator, char *) // defines a typedef String_Iterator of type char *
 // defines a function Baz_write like above, but also puts a field "write" inside Baz_VTable
 // (note the comma after the arguments; this change from normal methods is an annoying quirk that's sadly required)
 virtual_method(write, void ,(const *this, FILE *stream), {
-  fprintf(stream, "Baz@%p", (void *)this);
+    fprintf(stream, "Baz@%p", (void *)this);
 })
 ```
 
@@ -71,35 +71,35 @@ Below are a couple of classic OOP examples rewritten from C++ to C with `ssal.c`
 class(Employee)
 
 interface(Employee
-  , property(_name, const char *)
-  , property(_salary, float)
+    , property(_name, const char *)
+    , property(_salary, float)
 
-  , method(init, void ,(*this, const char *name, float salary) {
-    this->_name = name;
-    this->_salary = salary;
-  })
+    , method(init, void ,(*this, const char *name, float salary) {
+        this->_name = name;
+        this->_salary = salary;
+      })
 
-  , method(getName, const char * ,(const *this) { return this->_name; })
-  , method(getSalary, float ,(const *this) { return this->_salary; })
+    , method(getName, const char * ,(const *this) { return this->_name; })
+    , method(getSalary, float ,(const *this) { return this->_salary; })
 
-  , method(setName, void ,(*this, const char *name) { this->_name = name; })
-  , method(setSalary, void ,(*this, float salary) { this->_salary = salary; })
+    , method(setName, void ,(*this, const char *name) { this->_name = name; })
+    , method(setSalary, void ,(*this, float salary) { this->_salary = salary; })
 
-  , method(displayDetails, void ,(const *this) {
-    printf("Employee: %s\n", this->name);
-    printf("Salary: %g\n", this->salary);
-  })
+    , method(displayDetails, void ,(const *this) {
+        printf("Employee: %s\n", this->name);
+        printf("Salary: %g\n", this->salary);
+    })
 )
 
 int main(void) {
-  Employee emp; Employee_init(&emp, "Geek", 10000.0f);
-  Employee_displayDetails(&emp);
+    Employee emp; Employee_init(&emp, "Geek", 10000.0f);
+    Employee_displayDetails(&emp);
 
-  Employee_setSalary(&emp, 101.0f);
-  Employee_setName("Keeg");
+    Employee_setSalary(&emp, 101.0f);
+    Employee_setName("Keeg");
 
-  printf("Employee Salary: %g\n", Employee_getSalary(&emp));
-  printf("Employee Name: %s\n", Employee_getName(&emp));
+    printf("Employee Salary: %g\n", Employee_getSalary(&emp));
+    printf("Employee Name: %s\n", Employee_getName(&emp));
 }
 ```
 
@@ -113,41 +113,41 @@ class(Vehicle)
 class(Car)
 
 interface(Vehicle
-  , virtual_method(accelerate, void ,(const *this), { assert(!"unreachable"); })
-  , virtual_method(brake, void ,(const *this), { assert(!"unreachable"); })
-  // virtual_method(brake, void ,(const *this),) would instead move usage error to link-time
+    , virtual_method(accelerate, void ,(const *this), { assert(!"unreachable"); })
+    , virtual_method(brake, void ,(const *this), { assert(!"unreachable"); })
+    // virtual_method(brake, void ,(const *this),) would instead move usage error to link-time
 
-  , method(startEngine, void ,(const *this) {
-    puts("Engine started!");
-  })
+    , method(startEngine, void ,(const *this) {
+        puts("Engine started!");
+    })
 )
 
 interface(Car, extends(Vehicle)
-  , method(accelerate, void ,(const *this) {
-    puts("Car: Pressing gas pedal...");
-  })
-  , static_method(_accelerate, void ,(const Vehicle *this) {
-    Car_accelerate(dynamic_cast(Vehicle, Car)(this));
-  })
+    , method(accelerate, void ,(const *this) {
+        puts("Car: Pressing gas pedal...");
+    })
+    , static_method(_accelerate, void ,(const Vehicle *this) {
+        Car_accelerate(dynamic_cast(Vehicle, Car)(this));
+    })
 
-  , method(brake, void ,(const *this) {
-    puts("Car: Applying brakes...");
-  })
-  , static_method(_brake, void ,(const Vehicle *this) {
-    Car_brake(dynamic_cast(Vehicle, Car)(this));
-  })
+    , method(brake, void ,(const *this) {
+        puts("Car: Applying brakes...");
+    })
+    , static_method(_brake, void ,(const Vehicle *this) {
+        Car_brake(dynamic_cast(Vehicle, Car)(this));
+    })
 
-  , static_property(vTable, static const Car_VTable, {
-    as Vehicle_VTable.accelerate = Car__accelerate,
-    as Vehicle_VTable.brake = Car__brake,
-  })
+    , static_property(vTable, static const Car_VTable, {
+        as Vehicle_VTable.accelerate = Car__accelerate,
+        as Vehicle_VTable.brake = Car__brake,
+    })
 )
 
 int main(void) {
-  Vehicle_Ptr myCar = {&(Car){} as Vehicle, &Car_vTable as Vehicle_VTable};
-  Vehicle_startEngine(myCar._);
-  myCar.v->accelerate(myCar._);
-  myCar.v->brake(myCar._);
+    Vehicle_Ptr myCar = {&(Car){} as Vehicle, &Car_vTable as Vehicle_VTable};
+    Vehicle_startEngine(myCar._);
+    myCar.v->accelerate(myCar._);
+    myCar.v->brake(myCar._);
 }
 ```
 
@@ -160,26 +160,26 @@ class(Animal)
 class(Dog)
 
 interface(Animal
-  , method(eat, void ,(const *this) {
-    puts("Animal is eating...");
-  })
+    , method(eat, void ,(const *this) {
+        puts("Animal is eating...");
+    })
 
-  , method(sleep, void ,(const *this) {
-    puts("Animal is sleeping...");
-  })
+    , method(sleep, void ,(const *this) {
+        puts("Animal is sleeping...");
+    })
 )
 
 interface(Dog, extends(Animal)
-  , method(bark, void ,(const *this) {
-    puts("Dog is barking!");
-  })
+    , method(bark, void ,(const *this) {
+        puts("Dog is barking!");
+    })
 )
 
 int main(void) {
-  Dog myDog;
-  Animal_eat(&myDog as Animal);
-  Animal_sleep(&myDog as Animal);
-  Dog_bark(&myDog);
+    Dog myDog;
+    Animal_eat(&myDog as Animal);
+    Animal_sleep(&myDog as Animal);
+    Dog_bark(&myDog);
 }
 ```
 
@@ -194,11 +194,11 @@ Car.h
 class(Car)
 
 interface(Car, extends(Vehicle)
-  , method(accelerate, static inline void ,(const *this) {
-    puts("Car: Pressing gas pedal...");
-  })
-  , method(brake, void ,(const *this))
-  , static_property(vTable, extern const Car_VTable)
+    , method(accelerate, static inline void ,(const *this) {
+        puts("Car: Pressing gas pedal...");
+    })
+    , method(brake, void ,(const *this))
+    , static_property(vTable, extern const Car_VTable)
 )
 
 #endif
@@ -208,20 +208,20 @@ Car.c
 #include "Car.h"
 
 implementation(Car
-  , static_method(_accelerate, static void ,(const Vehicle *this) {
-    Car_accelerate(dynamic_cast(Vehicle, Car)(this));
-  })
+    , static_method(_accelerate, static void ,(const Vehicle *this) {
+        Car_accelerate(dynamic_cast(Vehicle, Car)(this));
+    })
 
-  , method(brake, void ,(const *this) {
-    puts("Car: Applying brakes...");
-  })
-  , static_method(_brake, static void ,(const Vehicle *this) {
-    Car_brake(dynamic_cast(Vehicle, Car)(this));
-  })
+    , method(brake, void ,(const *this) {
+        puts("Car: Applying brakes...");
+    })
+    , static_method(_brake, static void ,(const Vehicle *this) {
+        Car_brake(dynamic_cast(Vehicle, Car)(this));
+    })
 
-  , static_property(vTable, const Car_VTable, {
-    as Vehicle_VTable.accelerate = Car__accelerate,
-    as Vehicle_VTable.brake = Car__brake,
-  })
+    , static_property(vTable, const Car_VTable, {
+        as Vehicle_VTable.accelerate = Car__accelerate,
+        as Vehicle_VTable.brake = Car__brake,
+    })
 )
 ```
